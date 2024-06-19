@@ -1,0 +1,71 @@
+1
+
+SELECT 
+    orderNumber,
+    productCode,
+    SUM(quantityOrdered * priceEach) AS totalCost
+FROM 
+    orderdetails
+GROUP BY 
+    orderNumber, productCode
+ORDER BY 
+     totalCost DESC
+LIMIT 10
+
+2
+
+SELECT 
+    orderNumber,
+    SUM(quantityOrdered * priceEach) AS total
+FROM 
+    orderdetails
+GROUP BY 
+    orderNumber
+HAVING 
+    total > 59000
+3
+
+SELECT m2.orderNumber, m2.orderDate, m2.status, SUM(m1.quantityOrdered * m1.priceEach) AS total
+FROM orderdetails AS m1
+INNER JOIN orders AS m2 ON m1.orderNumber = m2.orderNumber
+GROUP BY m2.orderNumber
+
+4
+
+
+SELECT m3.contactFirstName, m3.contactLastName, m3.country, m2.orderNumber, m2.orderDate, m2.status, SUM(m1.quantityOrdered * m1.priceEach) AS total
+FROM orderdetails AS m1
+INNER JOIN orders AS m2 ON m1.orderNumber = m2.orderNumber
+INNER JOIN customers AS m3 ON m2.customerNumber=m3.customerNumber
+GROUP BY m2.orderNumber
+
+5
+SELECT m1.productName,  SUM(m2.quantityOrdered * m2.priceEach) AS totalCost
+FROM products as m1
+INNER JOIN orderdetails as m2 ON m1.productCode=m2.productCode
+GROUP BY m1.productName
+
+6
+
+SELECT lastName,firstName,contactLastName,contactFirstName
+FROM employees 
+RIGHT JOIN customers ON employees.employeeNumber=customers.salesRepEmployeeNumber
+
+
+UNION
+
+SELECT lastName,firstName,contactLastName,contactFirstName
+FROM employees 
+LEFT JOIN customers ON employees.employeeNumber=customers.salesRepEmployeeNumber
+
+7
+SELECT
+  e1.firstName,
+  e1.lastName,
+  e1.jobTitle,
+  e2.firstName AS subFirstName,
+  e2.lastName AS subLastName
+FROM
+  employees e1
+LEFT JOIN
+  employees e2 ON e1.employeeNumber = e2.reportsTo
